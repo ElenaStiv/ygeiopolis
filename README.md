@@ -1,32 +1,44 @@
-# ygeiopolis
-NTUA - Project for Database Course Spring 2026 - Hospital
+=========================================================
+      ΟΔΗΓΙΕΣ ΕΓΚΑΤΑΣΤΑΣΗΣ - ΕΦΑΡΜΟΓΗ "ΥΓΕΙΟΠΟΛΙΣ"
+=========================================================
 
-This database, written for Postgresql, contains data for music festivals.
+Γεια σας,
 
+Για να τρέξετε την εφαρμογή τοπικά στον υπολογιστή σας, 
+παρακαλώ ακολουθήστε τα παρακάτω απλά βήματα:
 
-# Project Structure
+--- 1. ΠΡΟΑΠΑΙΤΟΥΜΕΝΑ ---
+Βεβαιωθείτε ότι έχετε εγκατεστημένα:
+- Python (έκδοση 3.x)
+- Έναν τοπικό server MySQL (π.χ. XAMPP, WAMP, ή αυτόνομη MySQL)
 
-sql/ contains all sql files demanded by the project description, including the schema, constraints & triggers, indexes, data, queries and their outputs
+--- 2. ΡΥΘΜΙΣΗ ΤΗΣ ΒΑΣΗΣ ΔΕΔΟΜΕΝΩΝ (MySQL) ---
+1. Ανοίξτε το phpMyAdmin (ή άλλο εργαλείο διαχείρισης MySQL).
+2. Δημιουργήστε μια νέα, κενή βάση δεδομένων με το όνομα: ygeiopolis
+   (Προτείνεται Collation: utf8mb4_general_ci για σωστή υποστήριξη ελληνικών).
+3. Επιλέξτε τη νέα βάση και μεταβείτε στην καρτέλα "Εισαγωγή" (Import).
+4. Επιλέξτε το αρχείο "ygeiopolis.sql" που περιλαμβάνεται σε αυτόν τον φάκελο και πατήστε "Εκτέλεση" (Go).
 
-code/ contains all scripts and my own code used
+--- 3. ΡΥΘΜΙΣΗ ΚΩΔΙΚΩΝ ΠΡΟΣΒΑΣΗΣ ΣΤΟΝ ΚΩΔΙΚΑ ---
+Ανοίξτε το αρχείο της εφαρμογής που διαχειρίζεται τη σύνδεση με τη βάση (π.χ. το __init__.py ή το app.py) και βρείτε τις ρυθμίσεις της MySQL. 
+Βεβαιωθείτε ότι τα στοιχεία (username, password) ταιριάζουν με τα δικά σας. 
+Παράδειγμα:
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''  <-- Βάλτε εδώ τον δικό σας κωδικό, αν υπάρχει.
 
-diagrams/ contains the relational and the ER diagram
+--- 4. ΕΓΚΑΤΑΣΤΑΣΗ ΒΙΒΛΙΟΘΗΚΩΝ (DEPENDENCIES) ---
+Ανοίξτε ένα τερματικό (Command Prompt, PowerShell ή το τερματικό του VS Code), πλοηγηθείτε στον φάκελο της εφαρμογής και τρέξτε την παρακάτω εντολή:
 
-docs/ contains the report for the project
+    pip install -r requirements.txt
 
-other/ contains the rest, like the project description, the source of the ER diagram, docx of the report etc.
+Αυτό θα εγκαταστήσει το Flask και τη βιβλιοθήκη επικοινωνίας με τη MySQL.
 
-# Instructions
-Install postgres, postgres-contrib, python, faker (python lib)
+--- 5. ΕΚΤΕΛΕΣΗ ΤΗΣ ΕΦΑΡΜΟΓΗΣ ---
+Στο ίδιο τερματικό, τρέξτε την εφαρμογή με την εντολή:
 
-Change directory to $ cd code to run the automated scripts
+    python run.py
 
-Run ./make_load_sql.sh to create the load.sql file with all the insert statements. This basically combines the output of print_fake_data.py with adjust_data_for_Q14.sql into a single, gigantic load.sql. Depending on the configuration (specified in print_fake_data.py) this can take some time, and the resulting file may be hundreds of megabytes long.
+Μόλις ξεκινήσει ο server, ανοίξτε τον browser της επιλογής σας και επισκεφθείτε τη διεύθυνση:
+http://127.0.0.1:5000/
 
-Alternatively you can split/reconstruct the single load.sql to/from its chuncks load_part_x.sql using the scripts ./split_load_sql.sh/./reconstruct_load_sql.sh respectively.
-
-Run ./setup_db.sh to create a user, the database, install the schema (specified in sql/install.sql) and insert all the data (sql/load.sql).
-
-Run ./run_queries.sql in order to run all the QXX.sql queries and create their output files.
-
-
+Σας ευχαριστώ!
