@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="43200"> 
+    <title>Εφημερίες - Υγειόπολης</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Λογότυπο" width="40" height="40" class="me-2 rounded-circle border border-white">
+                <strong>Υγειόπολης</strong>
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Αρχική</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/doctors">Ιατροί</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/equipment">Εξοπλισμός</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/evaluation">Κάνε Αξιολόγηση</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/ratings">Αξιολογήσεις Ιατρών</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/shifts">Εφημερίες</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/status">Κατάσταση Τμημάτων</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact">Επικοινωνία</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="text-primary text-center">Πρόγραμμα Εφημεριών</h2>
+        
+        <div class="row justify-content-center my-4">
+            <div class="col-md-6 bg-white p-3 rounded shadow-sm border text-center">
+                <form method="GET" action="/shifts" class="d-flex align-items-center justify-content-center">
+                    <label class="me-2 fw-bold text-nowrap">Ημερομηνία:</label>
+                    <input type="date" name="date" class="form-control me-2 border-primary" style="max-width: 200px;" value="{{ raw_date }}">
+                    <button type="submit" class="btn btn-primary me-2">Εμφάνιση</button>
+                    <a href="/shifts" class="btn btn-outline-secondary">Σήμερα</a>
+                </form>
+                <p class="mt-2 mb-0 text-muted small">Προβολή βαρδιών για: <strong>{{ today }}</strong></p>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <table class="table table-hover table-striped align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-3">Τμήμα</th>
+                            <th>Βάρδια</th>
+                            <th>Ονοματεπώνυμο</th>
+                            <th>Ιδιότητα</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in shifts %}
+                        <tr>
+                            <td class="ps-3"><strong>{{ s.dept_name }}</strong></td>
+                            <td>
+                                {% if s.shift_type == 'morning' %}
+                                    <span class="badge bg-warning text-dark">Πρωινή (07:00-15:00)</span>
+                                {% elif s.shift_type == 'afternoon' %}
+                                    <span class="badge bg-info text-dark">Απογευματινή (15:00-23:00)</span>
+                                {% else %}
+                                    <span class="badge bg-dark">Νυχτερινή (23:00-07:00)</span>
+                                {% endif %}
+                            </td>
+                            <td class="fw-bold text-secondary">{{ s.last_name }} {{ s.first_name }}</td>
+                            <td>
+                                {% if s.staff_type == 'Doctor' %}
+                                    <span class="badge bg-primary">Ιατρός</span>
+                                {% elif s.staff_type == 'Nurse' %}
+                                    <span class="badge bg-success">Νοσηλευτής</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Διοικητικό</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <h5 class="text-muted">Δεν υπάρχουν προγραμματισμένες εφημερίες για αυτή την ημερομηνία.</h5>
+                                <p class="small">Επιλέξτε μια άλλη ημερομηνία από το ημερολόγιο.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

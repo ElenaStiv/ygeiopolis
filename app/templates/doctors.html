@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title>Ιατροί - Υγειόπολις</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Λογότυπο" width="40" height="40" class="me-2 rounded-circle">
+                <strong>Υγειόπολης</strong>
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Αρχική</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/doctors">Ιατροί</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/equipment">Εξοπλισμός</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/evaluation">Κάνε Αξιολόγηση</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/ratings">Αξιολογήσεις Ιατρών</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/shifts">Εφημερίες</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/status">Κατάσταση Τμημάτων</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact">Επικοινωνία</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center text-primary">Το Ιατρικό μας Προσωπικό</h2>
+        <div class="row mb-5 justify-content-center">
+            <div class="col-md-6 bg-white p-3 rounded shadow-sm border">
+                <form method="GET" action="/doctors" class="d-flex align-items-center">
+                    <label class="fw-bold me-3 text-secondary text-nowrap">Αναζήτηση ανά Ειδικότητα:</label>
+                    <select name="specialty" class="form-select me-2 border-primary">
+                        <option value="">-- Όλες οι Ειδικότητες --</option>
+                        
+                        {% for spec in specialties %}
+                            <option value="{{ spec }}" {% if spec == selected_specialty %}selected{% endif %}>
+                                {{ spec }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-primary px-4">Αναζήτηση</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            {% for doc in doctors %}
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm border-0 text-center">
+                    
+                    {% if 'Διευθυντής' in doc.rank %}
+                     <img src="{{ url_for('static', filename='images/director.png') }}" class="card-img-top mx-auto mt-3 rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% elif 'Α' in doc.rank %}
+                    <img src="{{ url_for('static', filename='images/epim_a.jpg') }}" class="card-img-top mx-auto mt-3 rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% elif 'Β' in doc.rank %}
+                     <img src="{{ url_for('static', filename='images/epim_b.png') }}" class="card-img-top mx-auto mt-3 rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                     <img src="{{ url_for('static', filename='images/resident.jpg') }}" class="card-img-top mx-auto mt-3 rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ doc.last_name }} {{ doc.first_name }}</h5>
+                        <p class="card-text text-muted mb-1"><strong>Ειδικότητα:</strong> {{ doc.specialty }}</p>
+                        <span class="badge bg-secondary">{{ doc.rank }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

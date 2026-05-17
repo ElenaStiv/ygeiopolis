@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title>Επικοινωνία - Υγειόπολης</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" width="40" height="40" class="me-2 rounded-circle border border-white">
+                <strong>Υγειόπολης</strong>
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Αρχική</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/doctors">Ιατροί</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/equipment">Εξοπλισμός</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/evaluation">Κάνε Αξιολόγηση</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/ratings">Αξιολογήσεις Ιατρών</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/shifts">Εφημερίες</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/status">Κατάσταση Τμημάτων</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/contact">Επικοινωνία</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="text-center text-primary mb-5 display-5">Επικοινωνία & Πρόσβαση</h2>
+        
+        <div class="row align-items-center bg-white shadow-sm rounded-4 p-4">
+            <div class="col-md-5 mb-4 mb-md-0">
+                <h4 class="fw-bold mb-4">Νοσοκομείο "Υγειόπολης"</h4>
+                
+                <p><strong>📍 Διεύθυνση:</strong> Λεωφόρος Υγείας 15, Αθήνα 11527</p>
+                <p><strong>📞 Τηλεφωνικό Κέντρο:</strong> 210-1234567 (24 ώρες)</p>
+                <p><strong>🚑 Τμήμα Επειγόντων:</strong> 210-1234999</p>
+                <p><strong>📧 Email:</strong> info@ygeiopolis.gr</p>
+                
+                <hr>
+                
+                <h5 class="text-primary mt-4">Ώρες Επισκεπτηρίου</h5>
+                <ul class="list-unstyled">
+                    <li><strong>Πρωί:</strong> 11:00 - 13:00</li>
+                    <li><strong>Απόγευμα:</strong> 17:00 - 19:00</li>
+                    <li class="text-danger small mt-2">* Μέγιστος αριθμός επισκεπτών ανά ασθενή: 2 άτομα.</li>
+                </ul>
+            </div>
+
+            <div class="col-md-7">
+                <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12577.855845558963!2d23.748366914569564!3d37.98683504192631!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1a2b0e6e768e1%3A0xb32c86ba012fa5b!2sAthens!5e0!3m2!1sen!2sgr!4v1716035000000!5m2!1sen!2sgr" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
