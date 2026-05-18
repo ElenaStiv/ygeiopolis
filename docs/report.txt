@@ -1,0 +1,932 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{latexsym,amsfonts,amssymb,amsthm,amsmath}
+\usepackage[utf8]{inputenc}    % για UTF-8 κωδικοποίηση
+\usepackage[english,greek]{babel}      % για ελληνική γλώσσα
+
+\usepackage{minted}
+
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{hyperref}
+
+
+\setlength{\parindent}{0in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.8in}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{18pt}
+
+\pagestyle{fancy}
+\fancyhead[l]{Υγειόπολης}
+\fancyhead[c]{Βάσεις Δεδομένων}
+\fancyhead[r]{17 Μαϊου 2026}
+\fancyfoot[c]{\thepage}
+\renewcommand{\headrulewidth}{0.2pt} %Creates a horizontal line underneath the header
+\setlength{\headheight}{15pt} %Sets enough space for the header
+
+\newcommand{\eng}{\selectlanguage{english}} % Shortcut for English
+\newcommand{\grk}{\selectlanguage{greek}} % Shortcut for Greek
+\newcommand{\sla}[1]{#1\hspace{-.25cm}/}
+
+\usepackage{xcolor}
+
+% Χρώματα
+\definecolor{myblue}{rgb}{0,0,0.6}
+\definecolor{myred}{rgb}{0.6,0,0}
+\definecolor{mygreen}{rgb}{0,0.5,0}
+
+\lstset{
+  language=SQL,
+  basicstyle=\ttfamily\small\selectlanguage{english},
+  keywordstyle=\color{myblue}\bfseries,
+  stringstyle=\color{myred},
+  commentstyle=\color{mygreen},
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  alsoletter={.}
+}
+
+\begin{document}
+
+% Πληροφορίες σχολής πάνω αριστερά
+\begin{flushleft}
+\textbf{ΕΘΝΙΚΟ ΜΕΤΣΟΒΙΟ ΠΟΛΥΤΕΧΝΕΙΟ}\\
+ΣΧΟΛΗ ΕΦΑΡΜΟΣΜΕΝΩΝ ΜΑΘΗΜΑΤΙΚΩΝ ΚΑΙ ΦΥΣΙΚΩΝ ΕΠΙΣΤΗΜΩΝ\\
+8ο ΕΞΑΜΗΝΟ\\
+Ακ. Έτος: 2025–2026
+\end{flushleft}
+
+\vspace{2cm}
+
+\begin{center}
+    \includegraphics[width=0.4\textwidth]{figures/emp.png}
+\end{center}
+
+\vspace{0.6in}
+
+\begin{center}
+\selectlanguage{greek}
+  {\LARGE \textbf{Βάσεις Δεδομένων 2026}}\\[1.5cm]
+  {\large \textbf{Ελένη Στιβακτάκη, Δημήτριος-Χρυσοβαλάντης Γαλανός, Μιχάλης Θρασυβουλίδης}\\[0.5cm]
+  {\large \textbf{Αριθμοί Μητρώων:} 09122122, 09122096, 09122014}\\[0.5cm]
+  {\large \textlatin{\url{https://github.com/ElenaStiv/ygeiopolis.git}}}\\[0.5cm]
+  {\large \textbf{Ημερομηνία:} 19 Μαϊου 2026}
+\end{center}
+
+
+\vspace{2in}
+
+\tableofcontents
+
+
+
+\vspace{4in}
+
+
+\section{Σχεδίαση Ιστοσελίδας}
+
+\begin{figure}[H]
+\centering
+\subcaptionbox{\textlatin{MySQL}}{\includegraphics[height=0.1\textwidth]{figures/mysql-logo.png}}
+\hspace{1em}
+\subcaptionbox{\textlatin{Python}}{\includegraphics[height=0.1\textwidth]{figures/python_logo.png}}
+\hspace{1em}
+\subcaptionbox{\textlatin{Flask}}{\includegraphics[height=0.1\textwidth]{figures/flask_logo.png}}
+\hspace{1em}
+\subcaptionbox{\textlatin{Bootstrap}}{\includegraphics[height=0.1\textwidth]{figures/bootstrap_logo.png}}
+\caption{\textlatin{Web Development Stack} Συστήματος}
+\label{stack_logos}
+\end{figure}
+
+\par Η εφαρμογή σχεδιάστηκε στο εξής \textlatin{stack} τεχνολογιών: \textlatin{MySQL} (για τη σχεσιακή βάση δεδομένων), \textlatin{Python} και \textlatin{Flask} (για το \textlatin{backend}), και \textlatin{HTML5/CSS3} με \textlatin{Bootstrap 5} (για τον σχεδιασμό και την προσαρμοστικότητα του \textlatin{Frontend} - \textlatin{Responsive UI}). (βλ. και σχήμα \ref{stack_logos}).
+
+\par Το σύστημα ακολουθεί αρχιτεκτονική \textbf{\textlatin{Server-Side Rendering (SSR)}}. Με τη χρήση του \textlatin{Flask framework} αναπτύχθηκε ο διακομιστής (\textlatin{server}) που διαχειρίζεται τη λογική της εφαρμογής και την απευθείας επικοινωνία με τη βάση δεδομένων. Η διεπαφή χρήστη αποδίδεται δυναμικά από τον \textlatin{server} με τη χρήση της μηχανής προτύπων \textbf{\textlatin{Jinja2}}, δημιουργώντας τελικά τα αρχεία \textlatin{HTML} που αποστέλλονται και προβάλλονται στον \textlatin{client} (στον \textlatin{browser} του χρήστη).
+
+\par Η αλληλεπίδραση του χρήστη με το σύστημα (π.χ. επιλογή βαρδιών, κλείσιμο ραντεβού, υποβολή αξιολογήσεων) πραγματοποιείται μέσω φορμών (\textlatin{HTML Forms}) με χρήση \textbf{\textlatin{HTTP POST} και \textlatin{GET requests}}. Τα δεδομένα αντλούνται μέσω της βιβλιοθήκης του \textlatin{Flask}, ελέγχονται στον \textlatin{server} και κατόπιν εκτελούνται τα αντίστοιχα \textlatin{SQL Queries} (\textlatin{INSERT, SELECT, UPDATE}) στη βάση δεδομένων.
+
+\par Σε ένα πραγματικό περιβάλλον παραγωγής (\textlatin{production}), η επικοινωνία μεταξύ του \textlatin{client} και του \textlatin{server} θα προστατεύεται υποχρεωτικά με πρωτόκολλο \textlatin{HTTPS}, εξασφαλίζοντας την κρυπτογράφηση και την ασφάλεια των ευαίσθητων ιατρικών και προσωπικών δεδομένων των ασθενών.
+
+
+\section{Δομή Αρχείων}
+
+Η αρχιτεκτονική οργάνωση του πηγαίου κώδικα της εφαρμογής ακολουθεί τη δομή που επιβάλλει το \textlatin{Flask framework}. Ο κώδικας έχει διαχωριστεί με σαφήνεια σε επίπεδο λογικής (\textlatin{Backend}), παρουσίασης (\textlatin{Frontend}) και στατικών αρχείων, εξασφαλίζοντας την ευκολία στη συντήρηση και την επεκτασιμότητα του συστήματος.
+
+Παρακάτω παρουσιάζεται η σχηματική δομή των καταλόγων (\textlatin{directory tree}) του \textlatin{project}:
+
+\selectlanguage{english}
+\begin{verbatim}
+ygeiopolis/
+│
+├── README.md                
+│
+├── diagrams/                
+│   ├── er.pdf               
+│   └── relational.pdf       
+│
+├── sql/                     
+│   ├── install.sql          
+│   ├── load.sql             # fake data
+│   ├── Q1.sql, Q2.sql ...   
+│   └── Q1_out.txt ...       # results from RDBMS
+│
+├── docs/                   
+│   └── report.pdf           
+│
+└── code/                    
+    ├── run.py               # initiation Flask server
+    ├── routes.py            
+    ├── requirements.txt     
+    ├── static/              # logos, iamges
+    └── templates/           #  HTML (Jinja2) - Frontend
+
+
+\end{verbatim}
+\selectlanguage{greek}
+
+\subsection*{Αναλυτική Περιγραφή Αρχείων}
+
+\begin{itemize}
+    \item \textbf{\texttt{$run.py$} / \texttt{$app.py$}:} Αποτελεί το κεντρικό σημείο εισόδου (\textlatin{entry point}) της εφαρμογής. Είναι υπεύθυνο για την αρχικοποίηση του \textlatin{Flask application}, τη ρύθμιση των παραμέτρων σύνδεσης με τη βάση δεδομένων \textlatin{MySQL} (κεντρικός διακομιστής, όνομα χρήστη, κωδικός πρόσβασης), καθώς και για την εκκίνηση του τοπικού \textlatin{web server}.
+    
+    \item \textbf{\texttt{$routes.py$}:} Το αρχείο αυτό περιέχει τον "εγκέφαλο" του \textlatin{backend}. Εδώ ορίζονται όλες οι διαδρομές (\textlatin{routes}) της εφαρμογής μέσω \textlatin{Python decorators} (π.χ. \texttt{$@ app.route$}). Κάθε διαδρομή εκτελεί τη δική της επιχειρηματική λογική: ανοίγει κανάλι επικοινωνίας με τη \textlatin{MySQL} μέσω \textlatin{cursors}, εκτελεί τα κατάλληλα \textlatin{SQL Queries} (\textlatin{SELECT} για προβολή, \textlatin{INSERT} για καταχώρηση), επεξεργάζεται τα αποτελέσματα και τα τροφοδοτεί στα αντίστοιχα αρχεία του φακέλου \textlatin{templates}.
+         
+    \item \textbf{\texttt{$requirements.txt$}:} Αρχείο κειμένου που καταγράφει με ακρίβεια όλες τις εξωτερικές βιβλιοθήκες \textlatin{Python} και τις εκδόσεις τους (όπως \textlatin{Flask}, \textlatin{Flask-MySQLdb}) που είναι απαραίτητες για τη σωστή εκτέλεση της εφαρμογής σε οποιοδήποτε νέο περιβάλλον.
+    
+    \item \textbf{Φάκελος \texttt{$static/$}:} Περιλαμβάνει όλα τα στατικά αρχεία που δεν αλλάζουν δυναμικά. Στον υποφάκελο \texttt{$images$} είναι αποθηκευμένα το λογότυπο του νοσοκομείου "Υγειόπολις", καθώς και οι φωτογραφίες του ιατρικού προσωπικού και του τεχνολογικού εξοπλισμού, οι οποίες φορτώνονται τοπικά από την εφαρμογή.
+    
+    \item \textbf{Φάκελος \texttt{$templates/$}:} Φιλοξενεί τα αρχεία \textlatin{HTML5} της εφαρμογής. Τα αρχεία αυτά δεν είναι στατικά, αλλά αποτελούν πρότυπα (\textlatin{templates}) της μηχανής \textlatin{Jinja2} και αλληλεπιδρά πραγματικά με τη βάση μας.
+
+    \item \textbf{\texttt{$README.md$}:} Ένα συνοπτικό αρχείο κειμένου που περιέχει βασικές πληροφορίες για την εργασία, τα προαπαιτούμενα εργαλεία (\textlatin{Python, MySQL}) και οδηγίες για την εγκατάσταση και εκτέλεση της εφαρμογής.
+    
+    \item \textbf{Φάκελος \texttt{$diagrams/$}:} Περιέχει τα παραδοτέα του θεωρητικού σχεδιασμού. Το \texttt{$er.pdf$} αποτυπώνει το εννοιολογικό μοντέλο της βάσης, ενώ το \texttt{$relational.pdf$} παρουσιάζει το τελικό σχεσιακό σχήμα που προέκυψε από τη μετάφραση του εννοιολογικού.
+    
+    \item \textbf{Φάκελος \texttt{$sql/$}:} Συγκεντρώνει όλη την αλληλεπίδραση με το \textlatin{RDBMS (MySQL)}. 
+    \begin{itemize}
+        \item Το \textbf{\texttt{$install.sql$}} περιέχει τα ερωτήματα δημιουργίας δεδομένων (\textlatin{DDL - CREATE TABLE}) και τους περιορισμούς ξένων κλειδιών. 
+        \item Το \textbf{\texttt{$load.sql$}} ενσωματώνει όλες τις εντολές μαζικής εισαγωγής (\textlatin{INSERT}) για τον εμπλουτισμό της βάσης με ρεαλιστικά δεδομένα (όπως ασθενείς, \textlatin{ICD-10, KEN}, φάρμακα και βάρδιες). 
+        \item Τα αρχεία \textbf{\texttt{$Qx.sql$}} και \textbf{\texttt{$Qx\_out.txt$}} αντιστοιχούν στην επίλυση και την έξοδο (αποτελέσματα) των επιμέρους ερωτημάτων της εκφώνησης.
+    \end{itemize}
+    
+    \item \textbf{Φάκελος \texttt{$docs/$}:} Περιέχει την παρούσα αναφορά (\texttt{$report.pdf$}), η οποία τεκμηριώνει πλήρως την αρχιτεκτονική του συστήματος, τις επιλογές υλοποίησης και τα ζητούμενα \textlatin{screenshots} της εφαρμογής.
+    
+\end{itemize}
+
+\textbf{\textlatin{Disclaimer}}: Για τη δημιουργία \textlatin{fake data}, καθώς και στη παραγωγή πηγαίου κώδικα για την ιστοσελίδα έγινε χρηση γνωστού \textlatin{LLM}. 
+
+\section{Οδηγίες Χειρισμού (Εγκατάσταση)}
+
+Για να τρέξετε την εφαρμογή τοπικά στον υπολογιστή σας, παρακαλώ ακολουθήστε τα παρακάτω απλά βήματα:
+
+\subsection*{1. Προαπαιτούμενα}
+Βεβαιωθείτε ότι έχετε εγκατεστημένα:
+\begin{itemize}
+    \item $Python$ (έκδοση 3.$x$)
+    \item Έναν τοπικό server $MySQL$ (π.χ., $XAMPP$, $WAMP$, ή αυτόνομη $MySQL$)
+\end{itemize}
+
+\subsection*{2. Ρύθμιση της Βάσης Δεδομένων ($MySQL$)}
+\begin{enumerate}
+    \item Ανοίξτε το $phpMyAdmin$ (ή άλλο εργαλείο διαχείρισης $MySQL$).
+    \item Δημιουργήστε μια νέα, κενή βάση δεδομένων με το όνομα: \texttt{$ygeiopolis$} \\
+    (Προτείνεται $Collation$: \texttt{$utf8mb4\_general\_ci$} για σωστή υποστήριξη ελληνικών).
+    \item Επιλέξτε τη νέα βάση και μεταβείτε στην καρτέλα ``Εισαγωγή'' ($Import$).
+    \item Επιλέξτε το αρχείο \texttt{$ygeiopolis.sql$} που περιλαμβάνεται στον φάκελο και πατήστε ``Εκτέλεση'' ($Go$).
+\end{enumerate}
+
+\subsection*{3. Ρύθμιση Κωδικών Πρόσβασης στον Κώδικα}
+Ανοίξτε το αρχείο της εφαρμογής που διαχειρίζεται τη σύνδεση με τη βάση (π.χ., το \texttt{$\_\_init\_\_.py$} ή το \texttt{$app.py$}) και βρείτε τις ρυθμίσεις της $MySQL$. Βεβαιωθείτε ότι τα στοιχεία ($username$, $password$) ταιριάζουν με τα δικά σας. \\
+
+
+\textbf{Παράδειγμα:}
+\selectlanguage{english}
+\begin{verbatim}
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''  
+\end{verbatim}
+\selectlanguage{greek}
+ Βάλτε εδώ τον δικό σας κωδικό, αν υπάρχει.
+
+
+\subsection*{4. Εγκατάσταση Βιβλιοθηκών ($Dependencies$)}
+Ανοίξτε ένα τερματικό ($Command Prompt$, $PowerShell$ ή το προτιμότερο το τερματικό του $VS$ $Code$), πλοηγηθείτε στον φάκελο της εφαρμογής και τρέξτε την παρακάτω εντολή:
+\begin{quote}
+    \textlatin{\texttt{pip install -r requirements.txt}}
+\end{quote}
+
+Αυτό θα εγκαταστήσει το $Flask$ και τη βιβλιοθήκη επικοινωνίας με τη $MySQL$.
+
+\subsection*{5. Εκτέλεση της Εφαρμογής}
+Στο ίδιο τερματικό, τρέξτε την εφαρμογή με την εντολή:
+\begin{quote}
+    \textlatin{\texttt{python run.py}}
+\end{quote}
+
+Μόλις ξεκινήσει ο $server$, ανοίξτε τον $browser$ της επιλογής σας και επισκεφθείτε τη διεύθυνση: 
+\selectlanguage{english}
+\url{http://127.0.0.1:5000/}
+\selectlanguage{greek}
+
+
+
+\section{Αναγκαίοι Περιορισμοί Εκφώνησης}
+
+\subsection*{Περιορισμοί Εποπτείας (Ιεραρχία Ιατρών)}
+
+Οι ιατροί με βαθμίδα «Ειδικευόμενος» πρέπει υποχρεωτικά να έχουν επόπτη.
+\\
+
+Οι ιατροί με βαθμίδα «Διευθυντής» δεν επιτρέπεται να έχουν επόπτη.
+\\
+
+Απαγορεύεται η κυκλική εποπτεία (π.χ. ο ιατρός Α να είναι επόπτης του Β, και ο Β επόπτης του Α).
+
+
+\subsection*{Περιορισμοί Χειρουργείων & Επεμβάσεων}
+
+Δύο ιατρικές επεμβάσεις δεν μπορούν να πραγματοποιούνται ταυτόχρονα στον ίδιο ακριβώς χώρο (αίθουσα/χειρουργείο).
+\\
+
+Ο ίδιος ιατρός απαγορεύεται να συμμετέχει σε δύο επεμβάσεις την ίδια χρονική στιγμή.
+
+
+\subsection*{Περιορισμοί Συνταγογράφησης & Φαρμάκων}
+
+Κάθε συνδυασμός (ιατρός, ασθενής, φάρμακο, ημερομηνία έναρξης) είναι μοναδικός.
+\\
+
+Απαγορεύεται αυστηρά η συνταγογράφηση ενός φαρμάκου αν ο ασθενής έχει αλλεργία σε κάποια από τις δραστικές του ουσίες.
+\\
+
+
+\subsection*{Οργανωτικοί Περιορισμοί Προσωπικού}
+
+Ενώ οι ιατροί μπορούν να ανήκουν σε ένα ή περισσότερα τμήματα , οι νοσηλευτές και το διοικητικό προσωπικό ανήκουν αυστηρά μόνο σε ένα.
+\\
+
+Κάθε τμήμα έχει υποχρεωτικά έναν διευθυντή, ο οποίος είναι ιατρός.
+
+
+\subsection*{Περιορισμοί Κόστους & Νοσηλείας}
+
+Αν η νοσηλεία ενός ασθενούς ξεπεράσει τη Μέση Διάρκεια Νοσηλείας (ΜΔΝ) του αντίστοιχου ΚΕΝ, τότε επιβάλλεται αναλογική πρόσθετη ημερήσια χρέωση(που ως δική μας παραδοχη έχουμε υποθέσει ότι το πρόσθετο κόστος ανέρχεται στα 100 €/μέρα).
+
+\subsection*{Βάρδιες}
+
+Κάθε βάρδια τμήματος πρέπει να καλύπτεται από τουλάχιστον 3 ιατρούς, 6 νοσηλευτές και 2 διοικητικούς υπαλλήλους.
+\\
+
+Αν σε μια βάρδια συμμετέχει ειδικευόμενος ιατρός, πρέπει υποχρεωτικά να είναι παρών τουλάχιστον ένας ιατρός βαθμίδας «Επιμελητής Α΄» ή «Διευθυντής».
+\\
+
+Μέγιστες Βάρδιες ανά Μήνα: Ιατροί έως 15, Νοσηλευτές έως 20, και Διοικητικό Προσωπικό έως 25.
+\\
+
+Πρέπει να μεσολαβούν τουλάχιστον 8 ώρες ανάπαυσης μεταξύ δύο διαδοχικών βαρδιών για το ίδιο άτομο.
+\\
+
+Κανένα μέλος του προσωπικού δεν μπορεί να κάνει πάνω από 3 συνεχόμενες νυχτερινές βάρδιες.
+\\
+
+
+Με σκοπό να ικανοποιούνται οι περιορισμοί των βαρδιών μοιράσαμε τις ειδικότητες των ιατρών με τον ακόλουθο τρόπο:
+\begin{enumerate}
+    \item Χειρουργοί: 19 (1 Διευθυντής + 18 Ιατροί)
+    \item Επειγοντολόγοι (ΤΕΠ): 19 (0 Διευθυντής - αυτονομία βαρδιών)
+    \item Παθολόγοι: 5 (1 Διευθυντής + 4 Ιατροί)
+    \item Εντατικολόγοι (ΜΕΘ): 4 (1 Διευθυντής + 3 Ιατροί)
+    \item Καρδιολόγοι: 3
+    \item Παιδίατροι: 3
+    \item Γυναικολόγοι: 3
+    \item Ορθοπεδικοί: 3
+    \item Ουρολόγοι: 3
+    \item Οφθαλμίατρος: 3
+    \item ΩΡΛ: 3
+    \item Νευρολόγοι: 3
+    \item Δερματολόγοι: 3
+    \item Ψυχίατροι: 3
+    \item Ακτινολόγοι: 3
+\end{enumerate}
+(Το σύνολο παραμένει 80 Ιατροί)
+
+\section{Υποθέσεις Υλοποίησης}
+
+Οι προδιαγραφές υλοποίησης ενδέχεται να μην είναι πλήρως καθορισμένες από το νοσοκομείο. Για λόγους πληρότητας, καταγράψαμε ενδεχόμενες υποθέσεις, σε πίνακα στο αρχείο $README.md$. Κάναμε εισαγωγή στη Βάση Δεδομένων (ΒΔ) πληροφορίες για κάθε οντότητα, ώστε να εκτελούνται με επιτυχία όλα τα ζητούμενα ερωτήματα και να επιστρέφουν τα κατάλληλα αποτελέσματα. Ενδεικτικά η εκφώνηση απαιτούσε 80 ιατρούς, 200 ασθενείς, 500 νοσηλείες, 15 τμήματα, 300 συνταγογραφήσεις, 10 χειρουργεία/αίθουσες, 150 ιατρικές πράξεις και 200 εργαστηριακές εξετάσεις.
+\\
+
+
+\subsection*{Χρονοπρογραμματισμός και Λειτουργία Νοσοκομείου}
+\begin{itemize}
+\item Το νοσοκομείο θεωρείται ότι ξεκίνησε τη λειτουργία του το 2024.
+\item Η βάση δεδομένων έχει τροφοδοτηθεί με δεδομένα που φτάνουν έως και τον Φεβρουάριο του 2026.
+\item Οι βάρδιες του προσωπικού ακολουθούν ένα σταθερό, επαναλαμβανόμενο μοτίβο κυκλικότητας 28 ημερών (4 εβδομάδες).
+\item Όλες οι διαδικασίες εισαγωγής ασθενών ($admissions$) στο νοσοκομείο θεωρείται πως πραγματοποιούνται κατά τη διάρκεια της πρωινής βάρδιας.
+\item Παρά τη γενική απαίτηση για 24ωρη εφημερία, κάναμε την παραδοχή για τα δεδομένα μας ότι η πλήρης ανοικτή λειτουργία κάποιων τμημάτων περιορίζεται στα πρωινά (εναλλάξ ανά ημέρα) ή μένουν κλειστά κάποια πρωινά καθημερινών, ενώ μόνο τα τμήματα αιχμής (Χειρουργικό και ΤΕΠ) δέχονται σταθερά 24ωρη ροή.
+\item Οι κλίνες έχουν τρεις καταστάσεις διαθέσιμες, κατειλημμένες και υπό καθαρισμό.
+\end{itemize}{}
+\\
+
+
+\subsection*{Προσωπικό (Ιατροί, Νοσηλευτές και Διοικητικοί)}
+\begin{itemize}
+\item Κατανομή Ευθύνης Νοσηλειών: Στα τεχνητά δεδομένα δοκιμής ($fake$ $data$) που δημιουργήθηκαν, μόνο ένα συγκεκριμένο μέρος του συνολικού ιατρικού προσωπικού έχει οριστεί ως υπεύθυνο για τις νοσηλείες των ασθενών.
+\item Αξιολογήσεις Ιατρών: Ως άμεση συνέπεια της παραπάνω παραδοχής, οι αξιολογήσεις των ασθενών (μετά την έξοδό τους) συνδέονται αποκλειστικά με αυτούς τους συγκεκριμένους ιατρούς που είχαν την κύρια ευθύνη της νοσηλείας τους (και όχι με το σύνολο των 80 ιατρών).
+\item Βάσει της παραδοχής μας για αναλογία 1 Ιατρού προς 3 Νοσηλευτές και δεδομένης της απαίτησης για 80 ιατρούς, έχουν εισαχθεί 240 νοσηλευτές.
+\item Για την εύκολη οπτική διάκριση κατά τις δοκιμές, οι αριθμοί μητρώου (ΑΜΚA για το προσωπικό, ΑΜΚΑ για τους ασθενείς) ξεκινούν με συγκεκριμένα ψηφία: το 8 για τους ιατρούς, το 9 για τους νοσηλευτές και το 1 για τους ασθενείς.
+\item Κάθε ιατρός ανήκει οργανικά σε ένα κύριο τμήμα, ωστόσο βάσει των αναγκών έχει τη δυνατότητα να εφημερεύει και να προσφέρει υπηρεσίες και σε έτερα τμήματα του νοσοκομείου.
+\item Οι ιατροί με ειδικότητα Παθολόγου έχουν τη δυνατότητα να ασκούν χρέη Διευθυντή Τμήματος και σε άλλα τμήματα, πέραν του αμιγώς Παθολογικού.
+\end{itemize}{}
+\\
+
+
+\subsection*{Διαχείριση Κλινών και Διαλογής }
+\begin{itemize}
+\item Το νοσοκομείο διαθέτει συνολικά 287 κλίνες σε διάφορα τμήματα.
+\item Το Ακτινολογικό τμήμα δεν διαθέτει καθόλου κλίνες, καθώς η φύση του είναι αμιγώς διαγνωστική/εργαστηριακή.
+\item Στο Τμήμα Επειγόντων Περιστατικών καταγράφηκαν 700 περιστατικά διαλογής. Από αυτά, τα 200 (που ταξινομήθηκαν στα επίπεδα επείγοντος 4 ή 5) έλαβαν οδηγίες και αποχώρησαν ως απλοί επισκέπτες, ενώ τα υπόλοιπα 500 κατέληξαν σε εισαγωγή και νοσηλεία (ικανοποιώντας πλήρως το ζητούμενο της εκφώνησης για 500 νοσηλείες).
+\end{itemize}{}
+\\
+
+
+\subsection*{Ιατρικές Πράξεις, Εξετάσεις και ΚΕΝ}
+\begin{itemize}
+\item Σε κάθε ιατρική πράξη/επέμβαση θεωρήθηκε ότι συμμετέχει μια σταθερή ομάδα 8 ατόμων.
+\item Ως ``Κύριος Ιατρός / Χειρουργό'' μίας επέμβασης ορίζεται αυτός που δίνει την εντολή και ζητά την πράξη (ο θεράπων), έχοντας υπό την επίβλεψή του τους υπόλοιπους βοηθούς (ιατρούς/νοσηλευτές).
+\item Η διάρκεια των ιατρικών πράξεων συμπληρώθηκε με δικά μας εκτιμώμενα δεδομένα για την πληρότητα της βάσης.
+\item Για λόγους απλοποίησης κατά την υλοποίηση του σχήματος, οι κωδικοί των Κλειστών Ενοποιημένων Νοσηλίων (Κ.Ε.Ν.) αντικαταστάθηκαν/χαρτογραφήθηκαν με φυσικούς αριθμούς (1, 2, 3, κ.λπ.), διατηρώντας όμως ανέπαφα τα δεδομένα αναφοράς.
+\item Το κόστος των εργαστηριακών εξετάσεων δεν προστίθεται επιπλέον στο συνολικό κόστος, καθώς θεωρείται ήδη ενσωματωμένο στο βασικό κόστος του Κ.Ε.Ν.
+\item Αντίστοιχα, για τις ανάγκες της κοστολόγησης, θεωρήθηκε πως η εκάστοτε ιατρική πράξη/επέμβαση ταυτίζεται κοστολογικά με το βασικό κόστος του αντίστοιχου ΚΕΝ.
+\end{itemize}{}
+\\
+
+
+\subsection*{Αλλεργίες και Φαρμακευτική Αγωγή}
+\begin{itemize}
+Υποθέσαμε ότι ένα 25-30$\%$ των ασθενών (π.χ. 65 στους 200 μοναδικούς ασθενείς) έχουν καταγεγραμμένο ιστορικό αλλεργιών σε συγκεκριμένες δραστικές ουσίες, ώστε να δοκιμαστούν επαρκώς οι περιορισμοί στη συνταγογράφηση.
+\end{itemize}{}
+
+
+Για την αποφυγή λανθασμένων καταχωρήσεων (π.χ. ανάθεση επέμβασης σε ιατρό που έχει ρεπό ή έχει σχολάσει), υλοποιήθηκαν $Triggers$ επιπέδου βάσης ($Database-level$ $Constraints$). Οι $Triggers$ ελέγχουν δυναμικά αν ο χρόνος της επέμβασης ($start\_time$ + $duration$) εμπίπτει στα αυστηρά όρια της προγραμματισμένης βάρδιας ($Shift$) του εκάστοτε υπαλλήλου. Σε περίπτωση αναντιστοιχίας, η βάση ακυρώνει τη συναλλαγή με σφάλμα 45000 ($User-Defined$ $Exception$), διασφαλίζοντας την απόλυτη ακεραιότητα των δεδομένων του νοσοκομείου.
+\\
+
+
+Επιπλέον, επειδή η εκφώνηση επιτρέπει την ένταξη σε περισσότερα από ένα τμήματα, θα εντάξουμε τους Επειγοντολόγους τόσο στο "Τμήμα Επειγόντων (ΤΕΠ)" όσο και στο "Παθολογικό Τμήμα", καθώς οι περισσότεροι έχουν ως επιβλέποντα τον Διευθυντή Παθολογίας.
+\\
+
+\section{Αιτιολόγηση ερωτήματος 3}
+
+Κατά την εκτέλεση του ερωτήματος 3 για περισσότερες από 3 νοσηλείες στο ίδιο τμήμα, το αποτέλεσμα ήταν κενό σύνολο ($empty set$). Αυτό κρίνεται ως αναμενόμενο και στατιστικά ορθό, καθώς σε ένα δείγμα 500 τυχαίων νοσηλειών ($dummy$ $data$) που κατανέμονται σε πολλά διαφορετικά τμήματα, η πιθανότητα ένας μοναδικός ασθενής να συμπτύξει 4 ή περισσότερες νοσηλείες στο ίδιο ακριβώς τμήμα είναι εξαιρετικά χαμηλή λόγω της μεγάλης στατιστικής διασποράς.
+\\
+
+Για τον λόγο αυτό, το κριτήριο προσαρμόστηκε σε 'τουλάχιστον 2 νοσηλείες' (>= 2). Με αυτόν τον τρόπο, το $query$ αναδεικνύει τις 'επανεισαγωγές' ($readmissions$), οι οποίες αποτελούν έναν από τους πιο κρίσιμους δείκτες ποιότητας ($KPIs$) στη διοίκηση νοσοκομείων, επιτρέποντας τον εντοπισμό ασθενών με χρόνια νοσήματα ή επαναλαμβανόμενες ιατρικές ανάγκες.
+
+\vspace{0.4in}
+
+\section{\eng {Entity Relationship Diagram}}
+
+Ο σχεδιασμός της βάσης δεδομένων του συστήματος "Υγειόπολις" πραγματοποιήθηκε σε δύο βασικά στάδια. Αρχικά, αναλύσαμε τις απαιτήσεις της εκφώνησης και προχωρήσαμε στη δημιουργία του Εννοιολογικού Μοντέλου, μέσω του διαγράμματος Οντοτήτων-Συσχετίσεων (\textlatin{Entity Relationship Diagram - ERD}). 
+
+Όπως φαίνεται στην παρακάτω εικόνα, το \textlatin{ERD} αποτυπώνει ξεκάθαρα τις κύριες οντότητες του νοσοκομείου (όπως Ασθενής, Προσωπικό, Τμήμα, Νοσηλεία, Βάρδια) καθώς και τις λογικές συσχετίσεις μεταξύ τους, θέτοντας τα θεμέλια για την υλοποίηση της βάσης.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/er.png}
+\caption{$ER$ $Diagram$ του συστήματος}
+\end{figure}
+
+
+\section{\eng{Relational Diagram}}
+
+Αφού ολοκληρώθηκε ο εννοιολογικός σχεδιασμός, το επόμενο βήμα ήταν η μετάφραση του \textlatin{ERD} στο Σχεσιακό Μοντέλο (\textlatin{Relational Model}). 
+
+Κατά τη μετάβαση αυτή, οι οντότητες μετατράπηκαν σε πίνακες και ορίστηκαν με αυστηρότητα τα Πρωτεύοντα και Ξένα Κλειδιά (\textlatin{Primary \& Foreign Keys}). Παράλληλα, επιλύθηκαν οι συσχετίσεις πολλών-προς-πολλούς (N:M) με τη δημιουργία ενδιάμεσων πινάκων, όπως για παράδειγμα ο πίνακας \textlatin{Shift\_Staff} (για την ανάθεση προσωπικού σε βάρδιες) και ο \textlatin{Doctor\_Department}. Το τελικό σχεσιακό διάγραμμα, το οποίο και υλοποιήθηκε στη \textlatin{MySQL}, παρουσιάζεται παρακάτω:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{figures/relational.png}
+\caption{$Relational$ $Diagramm$ Diagram του συστήματος}
+\end{figure}
+
+\vspace{1in}
+
+
+\section{\eng{SQL DDL SCRIPT}}
+Παρακάτω παρατίθεται ο πλήρης κώδικας $SQL$ για τη δημιουργία της βάσης δεδομένων (Πίνακες, $Triggers$, $Views$):
+\\
+
+
+\selectlanguage{english}
+\begin{lstlisting}
+
+CREATE DATABASE ygeiopolis;
+USE ygeiopolis;
+
+CREATE TABLE Staff (
+    amka VARCHAR(20) PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    age INT NOT NULL CHECK (age >= 18 AND age <= 75),
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    hire_date DATE NOT NULL,
+    staff_type VARCHAR(20) NOT NULL CHECK (staff_type IN ('Doctor', 'Nurse', 'Management')),
+    image_url VARCHAR(255),
+    image_desc TEXT
+);
+
+CREATE TABLE Department (
+    department_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    num_of_beds INT NOT NULL CHECK (num_of_beds >= 0),
+    building_floor VARCHAR(50) NOT NULL,
+    director_amka VARCHAR(20) NOT NULL,
+    image_url VARCHAR(255),
+    image_desc TEXT,
+    FOREIGN KEY (director_amka) REFERENCES Staff(amka)
+);
+
+CREATE TABLE Doctors (
+    amka VARCHAR(20) PRIMARY KEY,
+    licence_number VARCHAR(50) NOT NULL,
+    specialty VARCHAR(100) NOT NULL,
+    rank VARCHAR(50) NOT NULL,
+    supervisor_amka VARCHAR(20), 
+    FOREIGN KEY (amka) REFERENCES Staff(amka),
+    FOREIGN KEY (supervisor_amka) REFERENCES Doctors(amka)
+);
+
+CREATE TABLE Nurses (
+    amka VARCHAR(20) PRIMARY KEY,
+    rank VARCHAR(50) NOT NULL,
+    department_id INT NOT NULL,
+    FOREIGN KEY (amka) REFERENCES Staff(amka),
+    FOREIGN KEY (department_id) REFERENCES Department(department_id)
+);
+
+CREATE TABLE Management (
+    amka VARCHAR(20) PRIMARY KEY,
+    role VARCHAR(100) NOT NULL,
+    office VARCHAR(50) NOT NULL,
+    department_id INT NOT NULL,
+    FOREIGN KEY (amka) REFERENCES Staff(amka),
+    FOREIGN KEY (department_id) REFERENCES Department(department_id)
+);
+
+CREATE TABLE Patient (
+    amka VARCHAR(20) PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    father_name VARCHAR(50),
+    sex VARCHAR(10) NOT NULL CHECK (sex IN ('Male', 'Female', 'Other')),
+    birth_date DATE NOT NULL,
+    address VARCHAR(150),
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    weight FLOAT CHECK (weight > 0),
+    height FLOAT CHECK (height > 0),
+    job VARCHAR(100),
+    citizenship VARCHAR(50),
+    insurance VARCHAR(100)
+);
+
+CREATE TABLE Emergency_Contact (
+    contact_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_amka VARCHAR(20) NOT NULL,
+    contact_name VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(20) NOT NULL,
+    FOREIGN KEY (patient_amka) REFERENCES Patient(amka)
+);
+
+CREATE TABLE Bed (
+    bed_id INT AUTO_INCREMENT PRIMARY KEY,
+    department_id INT NOT NULL,
+    bed_number VARCHAR(20) NOT NULL,
+    bed_type VARCHAR(50) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    image_url VARCHAR(255),
+    image_desc TEXT,
+    FOREIGN KEY (department_id) REFERENCES Department(department_id)
+);
+
+CREATE TABLE Shift (
+    shift_id INT AUTO_INCREMENT PRIMARY KEY,
+    department_id INT NOT NULL,
+    shift_date DATE NOT NULL,
+    shift_type VARCHAR(15) NOT NULL CHECK (shift_type IN ('morning', 'afternoon', 'night')),
+    FOREIGN KEY (department_id) REFERENCES Department(department_id),
+    UNIQUE (department_id, shift_date, shift_type)
+);
+
+CREATE TABLE Shift_Staff (
+    shift_id INT NOT NULL,
+    staff_amka VARCHAR(20) NOT NULL,
+    PRIMARY KEY (shift_id, staff_amka),
+    FOREIGN KEY (shift_id) REFERENCES Shift(shift_id),
+    FOREIGN KEY (staff_amka) REFERENCES Staff(amka)
+);
+
+CREATE TABLE Doctor_Department (
+    doctor_amka VARCHAR(20) NOT NULL,
+    department_id INT NOT NULL,
+    PRIMARY KEY (doctor_amka, department_id),
+    FOREIGN KEY (doctor_amka) REFERENCES Doctors(amka),
+    FOREIGN KEY (department_id) REFERENCES Department(department_id)
+);
+
+CREATE TABLE Triage (
+    triage_id INT AUTO_INCREMENT PRIMARY KEY,
+    triage_datetime DATETIME NOT NULL,
+    symptoms_desc TEXT NOT NULL,
+    priority_level INT NOT NULL CHECK (priority_level BETWEEN 1 AND 5),
+    nurse_amka VARCHAR(20) NOT NULL,
+    patient_amka VARCHAR(20) NOT NULL,
+    FOREIGN KEY (nurse_amka) REFERENCES Nurses(amka),
+    FOREIGN KEY (patient_amka) REFERENCES Patient(amka)
+);
+
+CREATE TABLE KEN (
+    ken_id INT AUTO_INCREMENT PRIMARY KEY,
+    description TEXT NOT NULL,
+    base_cost FLOAT NOT NULL CHECK (base_cost >= 0),
+    duration INT NOT NULL CHECK (duration > 0)
+);
+
+CREATE TABLE Diagnosis (
+    icd10_code VARCHAR(20) PRIMARY KEY,
+    description TEXT NOT NULL
+);
+
+CREATE TABLE Hospitalization (
+    admission_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_amka VARCHAR(20) NOT NULL,
+    bed_id INT NOT NULL,
+    department_id INT NOT NULL,
+    ken_id INT NOT NULL,
+    admission_date DATE NOT NULL,
+    discharge_date DATE,
+    admission_diagnosis_code VARCHAR(20) NOT NULL,
+    discharge_diagnosis_code VARCHAR(20),
+    test_id INT,
+    total_cost INT,
+    FOREIGN KEY (patient_amka) REFERENCES Patient(amka),
+    FOREIGN KEY (bed_id) REFERENCES Bed(bed_id),
+    FOREIGN KEY (department_id) REFERENCES Department(department_id),
+    FOREIGN KEY (ken_id) REFERENCES KEN(ken_id),
+    FOREIGN KEY (admission_diagnosis_code) REFERENCES Diagnosis(icd10_code),
+    FOREIGN KEY (discharge_diagnosis_code) REFERENCES Diagnosis(icd10_code)
+);
+
+CREATE TABLE Evaluation (
+    evaluation_id INT AUTO_INCREMENT PRIMARY KEY,
+    admission_id INT NOT NULL UNIQUE,
+    nursing_care INT NOT NULL CHECK (nursing_care BETWEEN 1 AND 5),
+    cleanliness INT NOT NULL CHECK (cleanliness BETWEEN 1 AND 5),
+    food INT NOT NULL CHECK (food BETWEEN 1 AND 5),
+    overall_experience INT NOT NULL CHECK (overall_experience BETWEEN 1 AND 5),
+    FOREIGN KEY (admission_id) REFERENCES Hospitalization(admission_id)
+);
+
+
+CREATE TABLE Doctor_Evaluation (
+    doc_eval_id INT AUTO_INCREMENT PRIMARY KEY,
+    admission_id INT NOT NULL,
+    doctor_amka VARCHAR(20) NOT NULL,
+    medical_care INT NOT NULL CHECK (medical_care BETWEEN 1 AND 5),
+    UNIQUE (admission_id, doctor_amka),
+    FOREIGN KEY (admission_id) REFERENCES Hospitalization(admission_id),
+    FOREIGN KEY (doctor_amka) REFERENCES Doctors(amka)
+);
+
+CREATE TABLE Room (
+    room_id INT AUTO_INCREMENT PRIMARY KEY,
+    type VARCHAR(50) NOT NULL CHECK (type IN ('Operating Theater', 'Procedure Room', 'Lab')),
+    description TEXT,
+    image_url VARCHAR(255),
+    image_desc TEXT
+);
+
+CREATE TABLE Medical_Procedure (
+    procedure_id INT AUTO_INCREMENT PRIMARY KEY,
+    admission_id INT NOT NULL,
+    room_id INT NOT NULL,
+    main_doctor_amka VARCHAR(20) NOT NULL,
+    ken_id INT,
+    category VARCHAR(50),
+    name VARCHAR(100) NOT NULL,
+    start_time DATETIME NOT NULL, 
+    duration INT NOT NULL CHECK (duration > 0),
+    cost FLOAT NOT NULL CHECK (cost >= 0),
+    FOREIGN KEY (admission_id) REFERENCES Hospitalization(admission_id),
+    FOREIGN KEY (room_id) REFERENCES Room(room_id),
+    FOREIGN KEY (main_doctor_amka) REFERENCES Doctors(amka),
+    FOREIGN KEY (ken_id) REFERENCES KEN(ken_id)
+);
+
+CREATE TABLE Procedure_Assistant (
+    procedure_id INT NOT NULL,
+    staff_amka VARCHAR(20) NOT NULL,
+    PRIMARY KEY (procedure_id, staff_amka),
+    FOREIGN KEY (procedure_id) REFERENCES Medical_Procedure(procedure_id),
+    FOREIGN KEY (staff_amka) REFERENCES Staff(amka)
+);
+
+CREATE TABLE Lab_Test (
+    test_id INT AUTO_INCREMENT PRIMARY KEY,
+    admission_id INT NOT NULL,
+    ordering_doctor_amka VARCHAR(20) NOT NULL,
+    code VARCHAR(20) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    test_date DATE NOT NULL,
+    result TEXT,
+    cost FLOAT NOT NULL CHECK (cost >= 0),
+    FOREIGN KEY (admission_id) REFERENCES Hospitalization(admission_id),
+    FOREIGN KEY (ordering_doctor_amka) REFERENCES Doctors(amka)
+);
+
+CREATE TABLE DRUG (
+    ema_code VARCHAR(50) PRIMARY KEY,
+    commercial_name VARCHAR(100) NOT NULL,
+    image_url VARCHAR(255),
+    image_desc TEXT
+);
+
+CREATE TABLE Active_Ingredient (
+    ingredient_id INT AUTO_INCREMENT PRIMARY KEY,
+    ingredient_name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE Drug_Ingredient (
+    ema_code VARCHAR(50) NOT NULL,
+    ingredient_id INT NOT NULL,
+    PRIMARY KEY (ema_code, ingredient_id),
+    FOREIGN KEY (ema_code) REFERENCES DRUG(ema_code),
+    FOREIGN KEY (ingredient_id) REFERENCES Active_Ingredient(ingredient_id)
+);
+
+CREATE TABLE Patient_Allergy (
+    patient_amka VARCHAR(20) NOT NULL,
+    ingredient_id INT NOT NULL,
+    PRIMARY KEY (patient_amka, ingredient_id),
+    FOREIGN KEY (patient_amka) REFERENCES Patient(amka),
+    FOREIGN KEY (ingredient_id) REFERENCES Active_Ingredient(ingredient_id)
+);
+
+CREATE TABLE Prescription (
+    prescription_id INT AUTO_INCREMENT PRIMARY KEY,
+    admission_id INT NOT NULL,
+    patient_amka VARCHAR(20) NOT NULL,
+    doctor_amka VARCHAR(20) NOT NULL,
+    drug_ema_code VARCHAR(50) NOT NULL,
+    dosage_instruction TEXT NOT NULL,
+    frequency VARCHAR(50),
+    start_date DATE NOT NULL,
+    end_date DATE,
+    UNIQUE (doctor_amka, patient_amka, drug_ema_code, start_date),
+    FOREIGN KEY (admission_id) REFERENCES Hospitalization(admission_id),
+    FOREIGN KEY (patient_amka) REFERENCES Patient(amka),
+    FOREIGN KEY (doctor_amka) REFERENCES Doctors(amka),
+    FOREIGN KEY (drug_ema_code) REFERENCES DRUG(ema_code)
+);
+
+DELIMITER //
+
+CREATE TRIGGER trg_check_assistant_shift
+BEFORE INSERT ON Procedure_Assistant
+FOR EACH ROW
+BEGIN
+    DECLARE valid_shifts INT;
+    DECLARE proc_date DATE;
+    DECLARE proc_start_time TIME;
+    DECLARE proc_end_time TIME;
+
+    SELECT DATE(start_time), TIME(start_time), ADDTIME(TIME(start_time), SEC_TO_TIME(duration * 60))
+    INTO proc_date, proc_start_time, proc_end_time
+    FROM Medical_Procedure
+    WHERE procedure_id = NEW.procedure_id;
+
+    SELECT COUNT(*) INTO valid_shifts
+    FROM Shift_Staff ss
+    JOIN Shift s ON ss.shift_id = s.shift_id
+    WHERE ss.staff_amka = NEW.staff_amka
+      AND s.shift_date = proc_date
+      AND (
+          (s.shift_type = 'morning'   AND proc_start_time >= '08:00:00' AND proc_end_time <= '16:00:00') OR
+          (s.shift_type = 'afternoon' AND proc_start_time >= '16:00:00' AND proc_end_time <= '23:59:59') OR
+          (s.shift_type = 'night'     AND proc_start_time >= '00:00:00' AND proc_end_time <= '08:00:00')
+      );
+
+    IF valid_shifts = 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'ΣΦΑΛΜΑ: Ο βοηθός/νοσηλευτής δεν έχει βάρδια την ώρα που γίνεται η επέμβαση!';
+    END IF;
+END;
+//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER trg_check_main_doctor_shift
+BEFORE INSERT ON Medical_Procedure
+FOR EACH ROW
+BEGIN
+    DECLARE valid_shifts INT;
+    DECLARE proc_date DATE;
+    DECLARE proc_start_time TIME;
+    DECLARE proc_end_time TIME;
+
+    SET proc_date      = DATE(NEW.start_time);
+    SET proc_start_time = TIME(NEW.start_time);
+    SET proc_end_time  = ADDTIME(proc_start_time, SEC_TO_TIME(NEW.duration * 60));
+
+    SELECT COUNT(*) INTO valid_shifts
+    FROM Shift_Staff ss
+    JOIN Shift s ON ss.shift_id = s.shift_id
+    WHERE ss.staff_amka = NEW.main_doctor_amka
+      AND (
+          (s.shift_type = 'morning' AND s.shift_date = proc_date AND proc_start_time >= '07:00:00' AND proc_end_time <= '15:00:00')
+          OR
+          (s.shift_type = 'afternoon' AND s.shift_date = proc_date AND proc_start_time >= '15:00:00' AND proc_end_time <= '23:00:00')
+          OR
+          (s.shift_type = 'night' AND s.shift_date = DATE_SUB(proc_date, INTERVAL 1 DAY) AND proc_start_time >= '23:00:00')
+          OR
+          (s.shift_type = 'night' AND s.shift_date = proc_date AND proc_end_time <= '07:00:00')
+      );
+
+    IF valid_shifts = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ΣΦΑΛΜΑ: Ο κύριος ιατρός δεν έχει βάρδια εκείνη την ώρα!';
+    END IF;
+END;
+//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER trg_calculate_final_cost
+BEFORE UPDATE ON Hospitalization
+FOR EACH ROW
+BEGIN
+    DECLARE v_base_cost FLOAT;
+    DECLARE v_duration INT;
+    DECLARE extra_daily_cost FLOAT;
+    DECLARE actual_days INT;
+    DECLARE extra_days INT;
+
+    IF NEW.discharge_date IS NOT NULL AND OLD.discharge_date IS NULL THEN
+        SELECT base_cost, duration 
+        INTO v_base_cost, v_duration
+        FROM KEN 
+        WHERE ken_id = NEW.ken_id;
+
+        SET extra_daily_cost = v_base_cost / v_duration;
+        SET actual_days = DATEDIFF(NEW.discharge_date, NEW.admission_date);
+
+        IF actual_days > v_duration THEN
+            SET extra_days = actual_days - v_duration;
+            SET NEW.total_cost = v_base_cost + (extra_days * extra_daily_cost);
+        ELSE
+            SET NEW.total_cost = v_base_cost;
+        END IF;
+    END IF;
+END;
+//
+DELIMITER ;
+
+CREATE VIEW vw_active_patients AS
+SELECT 
+    h.admission_id AS 'Κωδικός Νοσηλείας',
+    p.last_name AS 'Επώνυμο Ασθενούς',
+    p.first_name AS 'Όνομα Ασθενούς',
+    d.name AS 'Τμήμα',
+    h.admission_date AS 'Ημερομηνία Εισαγωγής'
+FROM Hospitalization h
+JOIN Patient p ON h.patient_amka = p.amka
+JOIN Department d ON h.department_id = d.department_id
+WHERE h.discharge_date IS NULL;
+
+CREATE VIEW vw_doctor_ratings AS
+SELECT 
+    s.last_name AS 'Επώνυμο Ιατρού',
+    s.first_name AS 'Όνομα Ιατρού',
+    doc.specialty AS 'Ειδικότητα',
+    COUNT(de.doc_eval_id) AS 'Πλήθος Αξιολογήσεων',
+    ROUND(AVG(de.medical_care), 2) AS 'Μέσος Όρος (Άριστα το 5)'
+FROM Doctors doc
+JOIN Staff s ON doc.amka = s.amka
+JOIN Doctor_Evaluation de ON doc.amka = de.doctor_amka
+GROUP BY 
+    doc.amka, 
+    s.last_name, 
+    s.first_name, 
+    doc.specialty;
+\end{lstlisting}
+\selectlanguage{greek}
+
+\section{Χρήση Ευρετηρίων και Στρατηγικών \eng{Join}}
+
+\subsection{Ερώτημα 4ο}
+
+Σύμφωνα με τις απαιτήσεις της εργασίας, για τα ερωτήματα $Q04$ και $Q06$ παρατίθενται τα αποτελέσματα εκτέλεσής τους, καθώς και μια ενδελεχής ανάλυση των πλάνων εκτέλεσης (\textlatin{Execution Plans}) με χρήση της εντολής \textlatin{EXPLAIN}.
+\\
+
+Για να καταδειχθεί η σημασία των ευρετηρίων, υλοποιήθηκε μια εναλλακτική έκδοση (αντίστοιχη του \textlatin{IGNORE INDEX hint}), όπου η χρήση της συνάρτησης \textlatin{CONCAT()} στα πεδία των κλειδιών "τυφλώνει" εσκεμμένα τον \textlatin{Query Optimizer}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/q04_result.png}
+\caption{Αποτέλεσμα εκτέλεσης του Ερωτήματος 4 (\textlatin{Q04})}
+\end{figure}
+
+\subsubsection*{(α) Αποτέλεσμα \textlatin{EXPLAIN} (Βέλτιστη Έκδοση)}
+\selectlanguage{english}
+\begin{verbatim}
++----+-------------+-------+--------+--------------------------+------+-------+------+
+| id | select_type | table | type   | possible_keys            | key  | rows  | Extra|
++----+-------------+-------+--------+--------------------------+------+-------+------+
+|  1 | SIMPLE      | d     | const  | PRIMARY                  | PRIM | 1     | ...  |
+|  1 | SIMPLE      | de    | ref    | admission_id,doctor_amka | doct | 104   | ...  |
+|  1 | SIMPLE      | e     | eq_ref | admission_id             | admi | 1     | ...  |
++----+-------------+-------+--------+--------------------------+------+-------+------+
+\end{verbatim}
+\selectlanguage{greek}
+
+\subsubsection*{(β) Εναλλακτική Έκδοση (Εσκεμμένη τύφλωση \textlatin{Index} με \textlatin{CONCAT})}
+\selectlanguage{english}
+\begin{verbatim}
++----+-------------+-------+--------+---------------+------+------+-----------------+
+| id | select_type | table | type   | possible_keys | key  | rows | Extra           |
++----+-------------+-------+--------+---------------+------+------+-----------------+
+|  1 | SIMPLE      | d     | const  | PRIMARY       | PRIM | 1    | ...             |
+|  1 | SIMPLE      | e     | ALL    | admission_id  | NULL | 500  |                 |
+|  1 | SIMPLE      | de    | ref    | admission_id  | admi | 1    | Using index cond|
++----+-------------+-------+--------+---------------+------+------+-----------------+
+\end{verbatim}
+\selectlanguage{greek}
+
+\subsubsection*{(γ) Σύγκριση Κόστους \& Χρόνου}
+Στη βέλτιστη έκδοση, ο χρόνος εκτέλεσης ήταν \textbf{0.005 $sec$}, ενώ το κόστος (ελεγχόμενες γραμμές) περιορίστηκε δραματικά μέσω των \textlatin{types const, ref} και \textlatin{eq\_ref}. Στην εναλλακτική έκδοση (0.001 sec λόγω μικρού όγκου \textlatin{dummy data}), ο \textlatin{Optimizer} εξαναγκάστηκε σε πλήρη σάρωση (\textlatin{type: ALL}) του πίνακα \textlatin{Evaluation}, ανεβάζοντας τις σαρωμένες γραμμές (\textlatin{rows}) από 1 σε 500.
+
+\subsubsection*{(δ) Συμπεράσματα Ανάλυσης}
+Η παράκαμψη των ευρετηρίων στις συνθήκες σύνδεσης (\textlatin{JOIN}) αποδεικνύεται καταστροφική για την απόδοση. Ο \textlatin{Query Optimizer} αδυνατεί να χρησιμοποιήσει τα \textlatin{Primary Keys}, υποβαθμίζοντας την κλήση από άμεση εύρεση σε \textlatin{ALL} (\textlatin{Full Table Scan}). Σε ένα πραγματικό νοσοκομειακό σύστημα με εκατομμύρια εγγραφές, η συμπεριφορά της εναλλακτικής έκδοσης θα πολλαπλασίαζε εκθετικά το κόστος \textlatin{I/O} και τον χρόνο απόκρισης.
+
+
+\vspace{1cm}
+
+
+
+
+\subsection{Ερώτημα 6ο}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/q06_result.png}
+\caption{Αποτέλεσμα εκτέλεσης του Ερωτήματος 6 (\textlatin{Q06})}
+\end{figure}
+
+\subsubsection*{(α) Αποτέλεσμα \textlatin{EXPLAIN} (Βέλτιστη Έκδοση)}
+\selectlanguage{english}
+\begin{verbatim}
++----+-------------+-------+--------+------------------+------+------+----------------+
+| id | select_type | table | type   | possible_keys    | key  | rows | Extra          |
++----+-------------+-------+--------+------------------+------+------+----------------+
+|  1 | PRIMARY     | h     | ref    | idx_patient_amka | idx_ | 5    |Using where;... |
+|  1 | PRIMARY     | h     | eq_ref | PRIMARY          | PRIM | 1    |                |
+|  1 | PRIMARY     | e     | eq_ref | admission_id     | admi | 1    |                |
+|  3 | DERIVED     | Doct_E| ref    | admission_id     | admi | 1    |Using index cond|
++----+-------------+-------+--------+------------------+------+------+----------------+
+\end{verbatim}
+\selectlanguage{greek}
+
+\subsubsection*{(β) Εναλλακτική Έκδοση (Εσκεμμένη τύφλωση \textlatin{Index} στο \textlatin{WHERE})}
+\selectlanguage{english}
+\begin{verbatim}
++----+-------------+-------+--------+---------------+------+------+-----------------+
+| id | select_type | table | type   | possible_keys | key  | rows | Extra           |
++----+-------------+-------+--------+---------------+------+------+-----------------+
+|  1 | PRIMARY     | h     | ALL    | NULL          | NULL | 500  | Using where     |
+|  1 | PRIMARY     | e     | eq_ref | admission_id  | admi | 1    |                 |
+|  2 | DERIVED     | Doct_E| ALL    | admission_id  | NULL | 1000 | Using temporary |
++----+-------------+-------+--------+---------------+------+------+-----------------+
+\end{verbatim}
+\selectlanguage{greek}
+
+\subsubsection*{(γ) Σύγκριση Κόστους \& Χρόνου}
+Η κανονική εκτέλεση (0.005 sec) εντοπίζει ακαριαία τις ακριβείς 5 εγγραφές (\textlatin{rows: 5}) του ασθενούς μέσω του \texttt{$idx\_patient\_amka$}. Στην εναλλακτική προσέγγιση (0.001 sec), η τύφλωση στο σκέλος \textlatin{WHERE} επιφέρει κατακόρυφη πτώση της απόδοσης: ο πίνακας \textlatin{Hospitalization} υφίσταται \textlatin{Full Table Scan} (500 γραμμές), ενώ ο πίνακας \textlatin{Doctor\_Evaluation} σαρώνεται εξ ολοκλήρου (1000 γραμμές), εισάγοντας το βαρύ επιπλέον κόστος ταξινόμησης.
+
+\subsubsection*{(δ) Συμπεράσματα Ανάλυσης}
+Το εν λόγω ερώτημα επιβεβαιώνει τη ζωτική σημασία των ευρετηρίων στα πεδία που συμμετέχουν συχνά σε κριτήρια αναζήτησης (\textlatin{WHERE clause}). Η απενεργοποίηση του ευρετηρίου στο \textlatin{AMKA} ασθενούς ανάγκασε τη μηχανή της \textlatin{MySQL} όχι μόνο να διαβάσει άσκοπα όλες τις νοσηλείες της βάσης, αλλά και να δημιουργήσει προσωρινούς πίνακες στη μνήμη (\textlatin{Using temporary}) για τον υπολογισμό των \textlatin{aggregations} (\textlatin{SUM, COUNT}). Ο ορθός σχεδιασμός ευρετηρίων αποτρέπει αυτές τις ενεργοβόρες διαδικασίες.
+
+
+
+\end{document}
