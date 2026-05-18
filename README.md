@@ -4,9 +4,9 @@ This is a project for the Databases class in NTUA Electrical and Computer Engine
 
 ## Contributors
 
-Δημήτριος-Χρυσοβαλάντης Γαλανός
-Ελένη Στιβακτάκη
-Μιχάλης Θρασυβουλίδης
+1. Δημήτριος-Χρυσοβαλάντης Γαλανός 
+1. Ελένη Στιβακτάκη ([ElenaStiv](https://github.com/ElenaStiv))
+1. Μιχάλης Θρασυβουλίδης
 
 #  INSTALATION
 
