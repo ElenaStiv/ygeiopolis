@@ -6,7 +6,7 @@ This is a project for the Databases class in NTUA Electrical and Computer Engine
 
 1. Δημήτριος-Χρυσοβαλάντης Γαλανός 
 1. Ελένη Στιβακτάκη ([ElenaStiv](https://github.com/ElenaStiv))
-1. Μιχάλης Θρασυβουλίδης ([michaelthrasyvoulides-lgtm](https://github.com/michaelthrasyvoulides-lgtm)))
+1. Μιχάλης Θρασυβουλίδης ([michaelthrasyvoulides-lgtm](https://github.com/michaelthrasyvoulides-lgtm))
 
 #  INSTALATION
 
