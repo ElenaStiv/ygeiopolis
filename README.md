@@ -14,6 +14,7 @@ This is a project for the Databases class in NTUA Electrical and Computer Engine
 Βεβαιωθείτε ότι έχετε εγκατεστημένα:
 - Python (έκδοση 3.x)
 - Έναν τοπικό server MySQL (π.χ. XAMPP, WAMP, ή αυτόνομη MySQL)
+- Χρειάζεται στις ρυθμίσεις του MySQL του XAMPP να ρυθμιστεί το max_allowed_space = 256M
 
 ## 2. ΡΥΘΜΙΣΗ ΤΗΣ ΒΑΣΗΣ ΔΕΔΟΜΕΝΩΝ (MySQL)
 1. Ανοίξτε το phpMyAdmin (ή άλλο εργαλείο διαχείρισης MySQL).
