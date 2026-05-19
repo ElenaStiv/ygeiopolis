@@ -26,8 +26,9 @@ This is a project for the Databases class in NTUA Electrical and Computer Engine
 Ανοίξτε το αρχείο της εφαρμογής που διαχειρίζεται τη σύνδεση με τη βάση (π.χ. το __init__.py ή το app.py) και βρείτε τις ρυθμίσεις της MySQL. 
 Βεβαιωθείτε ότι τα στοιχεία (username, password) ταιριάζουν με τα δικά σας. 
 Παράδειγμα:
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''  
+
+- app.config['MYSQL_USER'] = 'root'
+- app.config['MYSQL_PASSWORD'] = ''  
 
 ## 4. ΕΓΚΑΤΑΣΤΑΣΗ ΒΙΒΛΙΟΘΗΚΩΝ (DEPENDENCIES) 
 Ανοίξτε ένα τερματικό (Command Prompt, PowerShell ή το τερματικό του VS Code), πλοηγηθείτε στον φάκελο της εφαρμογής και τρέξτε την παρακάτω εντολή:
