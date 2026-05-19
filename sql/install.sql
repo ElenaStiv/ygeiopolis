@@ -186,6 +186,7 @@ CREATE TABLE Diagnosis (
     description TEXT NOT NULL
 );
 
+SET FOREING_KEY_CHECKS = 0;
 -- 15. Πίνακας Νοσηλείας (Hospitalization)
 CREATE TABLE Hospitalization (
     admission_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -208,6 +209,7 @@ CREATE TABLE Hospitalization (
     FOREIGN KEY (discharge_diagnosis_code) REFERENCES Diagnosis(icd10_code),
     FOREIGN KEY (test_id) REFERENCES Lab_Test(test_id)
 );
+SET FOREIGN_KEY_CHECKS=1;
 
 -- 16. Πίνακας Αξιολόγησης (Evaluation) - Συσχετίζεται 1-προς-1 με τη Νοσηλεία
 CREATE TABLE Evaluation (
