@@ -56,4 +56,4 @@ Relational Diagram:
 
 ![Relational Diagram](/diagrams/relational.png)
 
-&copy; Galanos Dhmhtrios - Stivaktaki Eleni - Thrasivoulidis Mixalis
+&copy; Galanos Dhmhtrios - Stivaktaki Eleni - Thrasyvoulides Michael
